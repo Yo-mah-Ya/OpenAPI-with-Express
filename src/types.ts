@@ -26,6 +26,10 @@ export type components = {
       /** @enum {string} */
       readonly message: "Not Found";
     };
+    readonly CursorPagination: components["schemas"]["CursorPaginationFirst"] | components["schemas"]["CursorPaginationForward"] | components["schemas"]["CursorPaginationBackward"];
+    readonly CursorPaginationFirst: components["parameters"]["CursorPaginationFirst"];
+    readonly CursorPaginationForward: components["parameters"]["CursorPaginationFirst"] & components["parameters"]["CursorPaginationAfter"];
+    readonly CursorPaginationBackward: components["parameters"]["CursorPaginationLast"] & components["parameters"]["CursorPaginationBefore"];
     /** @description AllFilms */
     readonly AllFilms: readonly (components["schemas"]["Film"])[];
     /** @description Film */
@@ -55,7 +59,16 @@ export type components = {
       };
     };
   };
-  parameters: never;
+  parameters: {
+    /** @description list length to fetch */
+    readonly CursorPaginationFirst: number;
+    /** @description start cursor to fetch */
+    readonly CursorPaginationAfter: string;
+    /** @description list length to fetch */
+    readonly CursorPaginationLast: number;
+    /** @description end cursor to fetch */
+    readonly CursorPaginationBefore: string;
+  };
   requestBodies: never;
   headers: never;
   pathItems: never;

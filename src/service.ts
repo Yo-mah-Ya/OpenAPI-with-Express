@@ -57,22 +57,23 @@ const errorHandler: ErrorRequestHandler<
     return;
 };
 
-export const getExpressApp = (serviceContext: ServiceContext): Express =>
-    express()
-        .use(compression())
+export const getExpressApp = (serviceContext: ServiceContext): Express => {
+    const app = express();
+    app.use(compression())
         .use(helmet())
         .use(express.urlencoded({ extended: true }))
         .use(express.json())
-        .use("/api-docs", swaggerUi.serve, swaggerUi.setup(schema))
-        .use("/health", (_, res) => {
-            res.status(200).send("OK");
-        })
-        .use("/schema-json", (_, res) => {
-            res.status(200).json(schema);
-        })
-        .use(openApiValidator)
+        .use("/api-docs", swaggerUi.serve, swaggerUi.setup(schema));
+    app.get("/health", (_, res) => {
+        res.status(200).send("OK");
+    }).get("/schema-json", (_, res) => {
+        res.status(200).json(schema);
+    });
+    app.use(openApiValidator)
         .use(createRouter(serviceContext))
         .use(errorHandler);
+    return app;
+};
 
 export type ServiceContext = Record<string, never>;
 export const createServiceContext = (): ServiceContext => {

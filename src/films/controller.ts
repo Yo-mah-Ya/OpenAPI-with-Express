@@ -8,6 +8,11 @@ export const paths: OpenAPIV3.PathsObject = {
     "/films": {
         get: {
             operationId: "films",
+            parameters: [
+                {
+                    $ref: "#/components/schemas/CursorPagination",
+                },
+            ],
             responses: {
                 "200": {
                     description: "all films",
@@ -96,10 +101,11 @@ export const components: OpenAPIV3.ComponentsObject = {
 export const setRouter = (router: Router, context: ServiceContext): void => {
     router.get<
         never,
-        operations["films"]["responses"]["200"]["content"]["application/json"]
+        operations["films"]["responses"]["200"]["content"]["application/json"],
+        never
     >("/films", (req, res, next: NextFunction): void => {
         (async (): Promise<void> => {
-            req;
+            req.query;
             context;
             res.status(200).json(data);
         })().catch(next);
@@ -110,7 +116,6 @@ export const setRouter = (router: Router, context: ServiceContext): void => {
         | operations["film"]["responses"]["404"]["content"]["application/json"]
     >("/films/:id", (req, res, next: NextFunction): void => {
         (async (): Promise<void> => {
-            req;
             context;
             const response = data.find((d) => d.id === req.params.id);
             response
