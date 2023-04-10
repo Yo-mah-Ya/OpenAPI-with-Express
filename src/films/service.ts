@@ -2,23 +2,24 @@ import type { operations } from "../types";
 import { data } from "./test-data";
 import { cursorPaginationResponse } from "../pagination";
 
+const reorder = (
+    list: typeof data,
+    direction: operations["people"]["parameters"]["query"]["direction"]
+): typeof data => (direction === "asc" ? list : list.slice().reverse());
+
 export const getFilms = async (
     query: operations["films"]["parameters"]["query"]
 ): Promise<
     operations["films"]["responses"]["200"]["content"]["application/json"]
 > => {
-    const film = data.find((d) => d.id === query.cursor);
-    const films =
-        query.direction === "asc"
-            ? data.slice(film ? Number(film.id) : 0, query.length)
-            : data
-                  .slice()
-                  .reverse()
-                  .slice(film ? Number(film.id) : 0, query.length);
+    const reorderData = reorder(data, query.direction);
+    const filmIndex = reorderData.findIndex((d) => d.id === query.cursor);
+    const startIndex = filmIndex === -1 ? 0 : filmIndex + 1;
+    const films = reorderData.slice(startIndex, startIndex + query.length);
 
     return {
         pageInfo: cursorPaginationResponse(query, films, "id"),
-        totalCount: data.length,
+        totalCount: reorderData.length,
         items: films,
     };
 };

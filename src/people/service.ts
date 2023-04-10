@@ -2,23 +2,24 @@ import type { operations } from "../types";
 import { data } from "./test-data";
 import { cursorPaginationResponse } from "../pagination";
 
+const reorder = (
+    list: typeof data,
+    direction: operations["people"]["parameters"]["query"]["direction"]
+): typeof data => (direction === "asc" ? list : list.slice().reverse());
+
 export const getPeople = async (
     query: operations["people"]["parameters"]["query"]
 ): Promise<
     operations["people"]["responses"]["200"]["content"]["application/json"]
 > => {
-    const person = data.find((d) => d.id === query.cursor);
-    const people =
-        query.direction === "asc"
-            ? data.slice(person ? Number(person.id) : 0, query.length)
-            : data
-                  .slice()
-                  .reverse()
-                  .slice(person ? Number(person.id) : 0, query.length);
+    const reorderData = reorder(data, query.direction);
+    const personIndex = reorderData.findIndex((d) => d.id === query.cursor);
+    const startIndex = personIndex === -1 ? 0 : personIndex + 1;
+    const people = reorderData.slice(startIndex, startIndex + query.length);
 
     return {
         pageInfo: cursorPaginationResponse(query, people, "id"),
-        totalCount: data.length,
+        totalCount: reorderData.length,
         items: people,
     };
 };

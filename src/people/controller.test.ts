@@ -15,7 +15,7 @@ describe("getPeople", () => {
                 startCursor: "1",
                 endCursor: "3",
             },
-            totalCount: 83,
+            totalCount: 82,
             items: [
                 {
                     id: "1",
@@ -84,7 +84,7 @@ describe("getPeople", () => {
                 startCursor: "2",
                 endCursor: "4",
             },
-            totalCount: 83,
+            totalCount: 82,
             items: [
                 {
                     id: "2",
@@ -145,7 +145,7 @@ describe("getPeople", () => {
     test("forward and less than expected", async () => {
         const response = await supertest(app)
             .get("/people")
-            .query({ length: 3, cursor: "82", direction: "asc" });
+            .query({ length: 3, cursor: "81", direction: "asc" });
         expect(response.body).toStrictEqual({
             pageInfo: {
                 hasPreviousPage: true,
@@ -153,7 +153,7 @@ describe("getPeople", () => {
                 startCursor: "82",
                 endCursor: "83",
             },
-            totalCount: 83,
+            totalCount: 82,
             items: [
                 {
                     id: "82",
@@ -196,34 +196,16 @@ describe("getPeople", () => {
     test("backward", async () => {
         const response = await supertest(app)
             .get("/people")
-            .query({ length: 3, cursor: "1", direction: "desc" });
+            .query({ length: 3, cursor: "83", direction: "desc" });
         expect(response.body).toStrictEqual({
             pageInfo: {
                 hasPreviousPage: true,
                 hasNextPage: true,
-                startCursor: "83",
-                endCursor: "81",
+                startCursor: "82",
+                endCursor: "80",
             },
-            totalCount: 83,
+            totalCount: 82,
             items: [
-                {
-                    id: "83",
-                    name: "Tion Medon",
-                    height: 206,
-                    mass: 80,
-                    hair_color: ["none"],
-                    skin_color: ["grey"],
-                    eye_color: ["black"],
-                    birth_year: "unknown",
-                    gender: "male",
-                    homeworld: "12",
-                    films: ["6"],
-                    species: "37",
-                    vehicles: [],
-                    starships: [],
-                    created: "2014-12-20T20:35:04.260000Z",
-                    edited: "2014-12-20T21:17:50.498000Z",
-                },
                 {
                     id: "82",
                     name: "Sly Moore",
@@ -257,6 +239,24 @@ describe("getPeople", () => {
                     starships: [],
                     created: "2014-12-20T19:49:35.583000Z",
                     edited: "2014-12-20T21:17:50.493000Z",
+                },
+                {
+                    id: "80",
+                    name: "Tarfful",
+                    height: 234,
+                    mass: 136,
+                    hair_color: ["brown"],
+                    skin_color: ["brown"],
+                    eye_color: ["blue"],
+                    birth_year: "unknown",
+                    gender: "male",
+                    homeworld: "14",
+                    films: ["6"],
+                    species: "3",
+                    vehicles: [],
+                    starships: [],
+                    created: "2014-12-20T19:46:34.209000Z",
+                    edited: "2014-12-20T21:17:50.491000Z",
                 },
             ],
         });

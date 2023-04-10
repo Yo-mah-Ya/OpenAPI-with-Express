@@ -8,8 +8,8 @@ const responseCursor = <T extends Record<string, unknown>, K extends keyof T>(
     components["schemas"]["CursorPaginationResponse"]["pageInfo"],
     "startCursor" | "endCursor"
 > => ({
-    startCursor: items[0][cursorName],
-    endCursor: items[items.length - 1][cursorName],
+    startCursor: items[0]?.[cursorName],
+    endCursor: items[items.length - 1]?.[cursorName],
 });
 
 export const cursorPaginationResponse = <
