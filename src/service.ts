@@ -50,6 +50,10 @@ const errorHandler: ErrorRequestHandler<
             },
             error,
         });
+        if (error.status === 400) {
+            res.status(error.status).json({ message: "Bad Request" });
+            return;
+        }
         res.status(error.status).json({ message: error.message });
         return;
     }

@@ -26,12 +26,20 @@ export type components = {
       /** @enum {string} */
       readonly message: "Not Found";
     };
-    readonly CursorPagination: components["schemas"]["CursorPaginationFirst"] | components["schemas"]["CursorPaginationForward"] | components["schemas"]["CursorPaginationBackward"];
-    readonly CursorPaginationFirst: components["parameters"]["CursorPaginationFirst"];
-    readonly CursorPaginationForward: components["parameters"]["CursorPaginationFirst"] & components["parameters"]["CursorPaginationAfter"];
-    readonly CursorPaginationBackward: components["parameters"]["CursorPaginationLast"] & components["parameters"]["CursorPaginationBefore"];
-    /** @description AllFilms */
-    readonly AllFilms: readonly (components["schemas"]["Film"])[];
+    /** @description cursor pagination response */
+    readonly CursorPaginationResponse: {
+      /** @description Information to aid in pagination. */
+      readonly pageInfo: {
+        readonly endCursor?: string;
+        readonly hasNextPage: boolean;
+        readonly hasPreviousPage: boolean;
+        readonly startCursor?: string;
+      };
+      readonly totalCount?: number;
+    };
+    readonly Films: components["schemas"]["CursorPaginationResponse"] & {
+      readonly items: readonly (components["schemas"]["Film"])[];
+    };
     /** @description Film */
     readonly Film: {
       readonly id: string;
@@ -61,13 +69,11 @@ export type components = {
   };
   parameters: {
     /** @description list length to fetch */
-    readonly CursorPaginationFirst: number;
+    readonly length: number;
     /** @description start cursor to fetch */
-    readonly CursorPaginationAfter: string;
-    /** @description list length to fetch */
-    readonly CursorPaginationLast: number;
-    /** @description end cursor to fetch */
-    readonly CursorPaginationBefore: string;
+    readonly cursor: string;
+    /** @description the direction of pagination */
+    readonly direction: "asc" | "desc";
   };
   requestBodies: never;
   headers: never;
@@ -79,11 +85,18 @@ export type external = Record<string, never>;
 export type operations = {
 
   films: {
+    parameters: {
+      query: {
+        length: components["parameters"]["length"];
+        cursor: components["parameters"]["cursor"];
+        direction: components["parameters"]["direction"];
+      };
+    };
     responses: {
-      /** @description all films */
+      /** @description films response */
       200: {
         content: {
-          readonly "application/json": components["schemas"]["AllFilms"];
+          readonly "application/json": components["schemas"]["Films"];
         };
       };
     };

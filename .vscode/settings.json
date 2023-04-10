@@ -23,5 +23,12 @@
     }
   },
   "cSpell.enabled": true,
-  "cSpell.words": ["codegen", "datasource", "datasources", "followee", "opensearch"]
+  "cSpell.words": [
+    "codegen",
+    "datasource",
+    "datasources",
+    "deepmerge",
+    "opensearch",
+    "openapi"
+  ]
 }

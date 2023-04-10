@@ -2,7 +2,7 @@ import type { Router, NextFunction } from "express";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import type { ServiceContext } from "../service";
 import type { operations } from "../types";
-import { data } from "./test-data";
+import { getFilms, getFilm } from "./service";
 
 export const paths: OpenAPIV3.PathsObject = {
     "/films": {
@@ -10,16 +10,22 @@ export const paths: OpenAPIV3.PathsObject = {
             operationId: "films",
             parameters: [
                 {
-                    $ref: "#/components/schemas/CursorPagination",
+                    $ref: "#/components/parameters/length",
+                },
+                {
+                    $ref: "#/components/parameters/cursor",
+                },
+                {
+                    $ref: "#/components/parameters/direction",
                 },
             ],
             responses: {
                 "200": {
-                    description: "all films",
+                    description: "films response",
                     content: {
                         "application/json": {
                             schema: {
-                                $ref: "#/components/schemas/AllFilms",
+                                $ref: "#/components/schemas/Films",
                             },
                         },
                     },
@@ -67,12 +73,23 @@ export const paths: OpenAPIV3.PathsObject = {
 
 export const components: OpenAPIV3.ComponentsObject = {
     schemas: {
-        AllFilms: {
-            description: "AllFilms",
-            type: "array",
-            items: {
-                $ref: "#/components/schemas/Film",
-            },
+        Films: {
+            allOf: [
+                { $ref: "#/components/schemas/CursorPaginationResponse" },
+                {
+                    description: "AllFilms",
+                    type: "object",
+                    required: ["items"],
+                    properties: {
+                        items: {
+                            type: "array",
+                            items: {
+                                $ref: "#/components/schemas/Film",
+                            },
+                        },
+                    },
+                },
+            ],
         },
         Film: {
             description: "Film",
@@ -102,12 +119,11 @@ export const setRouter = (router: Router, context: ServiceContext): void => {
     router.get<
         never,
         operations["films"]["responses"]["200"]["content"]["application/json"],
-        never
+        never,
+        operations["films"]["parameters"]["query"]
     >("/films", (req, res, next: NextFunction): void => {
         (async (): Promise<void> => {
-            req.query;
-            context;
-            res.status(200).json(data);
+            res.status(200).json(getFilms(req.query));
         })().catch(next);
     });
     router.get<
@@ -117,7 +133,7 @@ export const setRouter = (router: Router, context: ServiceContext): void => {
     >("/films/:id", (req, res, next: NextFunction): void => {
         (async (): Promise<void> => {
             context;
-            const response = data.find((d) => d.id === req.params.id);
+            const response = getFilm(req.params.id);
             response
                 ? res.status(200).json(response)
                 : res.status(404).json({ message: "Not Found" });

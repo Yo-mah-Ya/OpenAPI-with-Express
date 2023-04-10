@@ -16,33 +16,26 @@ import {
 
 const commonComponents: OpenAPIV3.ComponentsObject = {
     parameters: {
-        CursorPaginationFirst: {
-            name: "first",
+        length: {
+            name: "length",
             in: "query",
             description: "list length to fetch",
             required: true,
             schema: { type: "integer", minimum: 1 },
         },
-        CursorPaginationAfter: {
-            name: "after",
+        cursor: {
+            name: "cursor",
             in: "query",
             description: "start cursor to fetch",
             required: true,
             schema: { type: "string" },
         },
-        CursorPaginationLast: {
-            name: "last",
+        direction: {
+            name: "direction",
             in: "query",
-            description: "list length to fetch",
+            description: "the direction of pagination",
             required: true,
-            schema: { type: "integer", minimum: 1 },
-        },
-        CursorPaginationBefore: {
-            name: "before",
-            in: "query",
-            description: "end cursor to fetch",
-            required: true,
-            schema: { type: "string" },
+            schema: { type: "string", enum: ["asc", "desc"] },
         },
     },
     schemas: {
@@ -58,45 +51,30 @@ const commonComponents: OpenAPIV3.ComponentsObject = {
             required: ["message"],
             properties: { message: { type: "string", enum: ["Not Found"] } },
         },
-        CursorPagination: {
-            oneOf: [
-                {
-                    $ref: "#/components/schemas/CursorPaginationFirst",
+        CursorPaginationResponse: {
+            description: "cursor pagination response",
+            type: "object",
+            required: ["pageInfo"],
+            properties: {
+                pageInfo: {
+                    description: "Information to aid in pagination.",
+                    type: "object",
+                    required: ["hasPreviousPage", "hasNextPage"],
+                    properties: {
+                        endCursor: { type: "string" },
+                        hasNextPage: { type: "boolean" },
+                        hasPreviousPage: { type: "boolean" },
+                        startCursor: { type: "string" },
+                    },
                 },
-                {
-                    $ref: "#/components/schemas/CursorPaginationForward",
-                },
-                {
-                    $ref: "#/components/schemas/CursorPaginationBackward",
-                },
-            ],
-        },
-        CursorPaginationFirst: {
-            allOf: [
-                {
-                    $ref: "#/components/parameters/CursorPaginationFirst",
-                },
-            ],
-        },
-        CursorPaginationForward: {
-            allOf: [
-                {
-                    $ref: "#/components/parameters/CursorPaginationFirst",
-                },
-                {
-                    $ref: "#/components/parameters/CursorPaginationAfter",
-                },
-            ],
-        },
-        CursorPaginationBackward: {
-            allOf: [
-                {
-                    $ref: "#/components/parameters/CursorPaginationLast",
-                },
-                {
-                    $ref: "#/components/parameters/CursorPaginationBefore",
-                },
-            ],
+                totalCount: { type: "integer" },
+                // items: {
+                //     type: "array",
+                //     items: {
+                //         $ref: "#/components/schemas/Country",
+                //     },
+                // },
+            },
         },
     },
     responses: {
