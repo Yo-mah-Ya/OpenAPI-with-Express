@@ -5,14 +5,10 @@ import {
     components as filmsComponents,
     paths as filmsPaths,
 } from "./films/controller";
-// import {
-//     components as countryComponents,
-//     paths as countryPaths,
-// } from "./country/controller";
-// import {
-//     components as countryLanguageComponents,
-//     paths as countryLanguagePaths,
-// } from "./country-language/controller";
+import {
+    components as peopleComponents,
+    paths as peoplePaths,
+} from "./people/controller";
 
 const commonComponents: OpenAPIV3.ComponentsObject = {
     parameters: {
@@ -27,7 +23,7 @@ const commonComponents: OpenAPIV3.ComponentsObject = {
             name: "cursor",
             in: "query",
             description: "start cursor to fetch",
-            required: true,
+            required: false,
             schema: { type: "string" },
         },
         direction: {
@@ -54,7 +50,7 @@ const commonComponents: OpenAPIV3.ComponentsObject = {
         CursorPaginationResponse: {
             description: "cursor pagination response",
             type: "object",
-            required: ["pageInfo"],
+            required: ["pageInfo", "totalCount"],
             properties: {
                 pageInfo: {
                     description: "Information to aid in pagination.",
@@ -68,12 +64,6 @@ const commonComponents: OpenAPIV3.ComponentsObject = {
                     },
                 },
                 totalCount: { type: "integer" },
-                // items: {
-                //     type: "array",
-                //     items: {
-                //         $ref: "#/components/schemas/Country",
-                //     },
-                // },
             },
         },
     },
@@ -91,16 +81,11 @@ const commonComponents: OpenAPIV3.ComponentsObject = {
     },
 };
 
-const paths = deepmerge.all<OpenAPIV3.PathsObject>([
-    filmsPaths,
-    // countryPaths,
-    // countryLanguagePaths,
-]);
+const paths = deepmerge.all<OpenAPIV3.PathsObject>([filmsPaths, peoplePaths]);
 const components = deepmerge.all<OpenAPIV3.ComponentsObject>([
     commonComponents,
     filmsComponents,
-    // countryComponents,
-    // countryLanguageComponents,
+    peopleComponents,
 ]);
 export const schema: OpenAPIV3.Document = {
     openapi: "3.0.9",

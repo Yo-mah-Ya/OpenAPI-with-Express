@@ -2,9 +2,11 @@ import type { operations } from "../types";
 import { data } from "./test-data";
 import { cursorPaginationResponse } from "../pagination";
 
-export const getFilms = (
+export const getFilms = async (
     query: operations["films"]["parameters"]["query"]
-): operations["films"]["responses"]["200"]["content"]["application/json"] => {
+): Promise<
+    operations["films"]["responses"]["200"]["content"]["application/json"]
+> => {
     const film = data.find((d) => d.id === query.cursor);
     const films =
         query.direction === "asc"
@@ -21,10 +23,11 @@ export const getFilms = (
     };
 };
 
-export const getFilm = (
+export const getFilm = async (
     id: operations["film"]["parameters"]["path"]["id"]
-):
+): Promise<
     | operations["film"]["responses"]["200"]["content"]["application/json"]
-    | undefined => {
+    | undefined
+> => {
     return data.find((d) => d.id === id);
 };

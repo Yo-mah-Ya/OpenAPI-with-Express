@@ -123,7 +123,7 @@ export const setRouter = (router: Router, context: ServiceContext): void => {
         operations["films"]["parameters"]["query"]
     >("/films", (req, res, next: NextFunction): void => {
         (async (): Promise<void> => {
-            res.status(200).json(getFilms(req.query));
+            res.status(200).json(await getFilms(req.query));
         })().catch(next);
     });
     router.get<
@@ -133,7 +133,7 @@ export const setRouter = (router: Router, context: ServiceContext): void => {
     >("/films/:id", (req, res, next: NextFunction): void => {
         (async (): Promise<void> => {
             context;
-            const response = getFilm(req.params.id);
+            const response = await getFilm(req.params.id);
             response
                 ? res.status(200).json(response)
                 : res.status(404).json({ message: "Not Found" });

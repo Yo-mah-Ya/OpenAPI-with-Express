@@ -18,7 +18,7 @@ export const cursorPaginationResponse = <
 >(
     param: {
         length: components["parameters"]["length"];
-        cursor: components["parameters"]["cursor"];
+        cursor?: components["parameters"]["cursor"];
         direction: components["parameters"]["direction"];
     },
     items: Items<T, K>[],
@@ -26,7 +26,7 @@ export const cursorPaginationResponse = <
 ): components["schemas"]["CursorPaginationResponse"]["pageInfo"] => {
     if (param.direction === "asc") {
         return {
-            hasPreviousPage: true,
+            hasPreviousPage: param.cursor != undefined,
             hasNextPage: param.length <= items.length,
             ...responseCursor(items, cursorName),
         };

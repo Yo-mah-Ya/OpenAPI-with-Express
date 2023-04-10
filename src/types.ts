@@ -11,6 +11,12 @@ export type paths = {
   "/films/{id}": {
     get: operations["film"];
   };
+  "/people": {
+    get: operations["people"];
+  };
+  "/people/{id}": {
+    get: operations["person"];
+  };
 };
 
 export type webhooks = Record<string, never>;
@@ -35,7 +41,7 @@ export type components = {
         readonly hasPreviousPage: boolean;
         readonly startCursor?: string;
       };
-      readonly totalCount?: number;
+      readonly totalCount: number;
     };
     readonly Films: components["schemas"]["CursorPaginationResponse"] & {
       readonly items: readonly (components["schemas"]["Film"])[];
@@ -55,6 +61,27 @@ export type components = {
       readonly starships?: readonly (string)[];
       readonly vehicles?: readonly (string)[];
       readonly species?: readonly (string)[];
+      readonly created?: string;
+      readonly edited?: string;
+    };
+    readonly People: components["schemas"]["CursorPaginationResponse"] & {
+      readonly items: readonly (components["schemas"]["Person"])[];
+    };
+    /** @description Person */
+    readonly Person: {
+      readonly id: string;
+      readonly name: string;
+      readonly height?: number;
+      readonly mass?: number;
+      readonly hair_color?: readonly (string)[];
+      readonly skin_color?: readonly (string)[];
+      readonly eye_color?: readonly (string)[];
+      readonly birth_year?: string;
+      readonly gender?: string;
+      readonly homeworld?: string;
+      readonly films?: readonly (string)[];
+      readonly vehicles?: readonly (string)[];
+      readonly starships?: readonly (string)[];
       readonly created?: string;
       readonly edited?: string;
     };
@@ -88,7 +115,7 @@ export type operations = {
     parameters: {
       query: {
         length: components["parameters"]["length"];
-        cursor: components["parameters"]["cursor"];
+        cursor?: components["parameters"]["cursor"];
         direction: components["parameters"]["direction"];
       };
     };
@@ -113,6 +140,45 @@ export type operations = {
       200: {
         content: {
           readonly "application/json": components["schemas"]["Film"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        content: {
+          readonly "application/json": components["schemas"]["NotFound"];
+        };
+      };
+    };
+  };
+  people: {
+    parameters: {
+      query: {
+        length: components["parameters"]["length"];
+        cursor?: components["parameters"]["cursor"];
+        direction: components["parameters"]["direction"];
+      };
+    };
+    responses: {
+      /** @description people response */
+      200: {
+        content: {
+          readonly "application/json": components["schemas"]["People"];
+        };
+      };
+    };
+  };
+  person: {
+    parameters: {
+      path: {
+        /** @description ID of people */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description person */
+      200: {
+        content: {
+          readonly "application/json": components["schemas"]["Person"];
         };
       };
       /** @description Not Found */
