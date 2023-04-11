@@ -9,9 +9,7 @@ const reorder = (
 
 export const getPeople = async (
     query: operations["people"]["parameters"]["query"]
-): Promise<
-    operations["people"]["responses"]["200"]["content"]["application/json"]
-> => {
+): Promise<operations["people"]["responses"]["200"]["content"]["application/json"]> => {
     const reorderData = reorder(data, query.direction);
     const personIndex = reorderData.findIndex((d) => d.id === query.cursor);
     const startIndex = personIndex === -1 ? 0 : personIndex + 1;
@@ -27,8 +25,7 @@ export const getPeople = async (
 export const getPerson = async (
     id: operations["person"]["parameters"]["path"]["id"]
 ): Promise<
-    | operations["person"]["responses"]["200"]["content"]["application/json"]
-    | undefined
+    operations["person"]["responses"]["200"]["content"]["application/json"] | undefined
 > => {
     return data.find((d) => d.id === id);
 };

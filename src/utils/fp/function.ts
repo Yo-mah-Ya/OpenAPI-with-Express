@@ -1,10 +1,10 @@
-import { isNotNullish } from "../nullish";
-
 export type Lazy<A> = {
     (): A;
 };
 
 export const identity = <A>(a: A): A => a;
+const isFunction = (f: unknown): f is (...args: unknown[]) => unknown =>
+    typeof f === "function";
 
 export function flow<A extends ReadonlyArray<unknown>, B>(
     ab: (...a: A) => B
@@ -89,28 +89,28 @@ export function flow<A extends ReadonlyArray<unknown>, B, C, D, E, F, G, H, I, J
     | ((...a: A) => H)
     | ((...a: A) => I)
     | ((...a: A) => J) {
-    if (!isNotNullish(bc)) {
+    if (!isFunction(bc)) {
         return ab;
     }
-    if (!isNotNullish(cd)) {
+    if (!isFunction(cd)) {
         return (...a: A) => bc(ab(...a));
     }
-    if (!isNotNullish(de)) {
+    if (!isFunction(de)) {
         return (...a: A) => cd(bc(ab(...a)));
     }
-    if (!isNotNullish(ef)) {
+    if (!isFunction(ef)) {
         return (...a: A) => de(cd(bc(ab(...a))));
     }
-    if (!isNotNullish(fg)) {
+    if (!isFunction(fg)) {
         return (...a: A) => ef(de(cd(bc(ab(...a)))));
     }
-    if (!isNotNullish(gh)) {
+    if (!isFunction(gh)) {
         return (...a: A) => fg(ef(de(cd(bc(ab(...a))))));
     }
-    if (!isNotNullish(hi)) {
+    if (!isFunction(hi)) {
         return (...a: A) => gh(fg(ef(de(cd(bc(ab(...a)))))));
     }
-    if (!isNotNullish(ij)) {
+    if (!isFunction(ij)) {
         return (...a: A) => hi(gh(fg(ef(de(cd(bc(ab(...a))))))));
     }
     return (...a: A) => ij(hi(gh(fg(ef(de(cd(bc(ab(...a)))))))));
@@ -379,61 +379,61 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T>
     rs?: (r: R) => S,
     st?: (s: S) => T
 ): A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T {
-    if (!isNotNullish(ab)) {
+    if (!isFunction(ab)) {
         return a;
     }
-    if (!isNotNullish(bc)) {
+    if (!isFunction(bc)) {
         return ab(a);
     }
-    if (!isNotNullish(cd)) {
+    if (!isFunction(cd)) {
         return bc(ab(a));
     }
-    if (!isNotNullish(de)) {
+    if (!isFunction(de)) {
         return cd(bc(ab(a)));
     }
-    if (!isNotNullish(ef)) {
+    if (!isFunction(ef)) {
         return de(cd(bc(ab(a))));
     }
-    if (!isNotNullish(fg)) {
+    if (!isFunction(fg)) {
         return ef(de(cd(bc(ab(a)))));
     }
-    if (!isNotNullish(gh)) {
+    if (!isFunction(gh)) {
         return fg(ef(de(cd(bc(ab(a))))));
     }
-    if (!isNotNullish(hi)) {
+    if (!isFunction(hi)) {
         return gh(fg(ef(de(cd(bc(ab(a)))))));
     }
-    if (!isNotNullish(ij)) {
+    if (!isFunction(ij)) {
         return hi(gh(fg(ef(de(cd(bc(ab(a))))))));
     }
-    if (!isNotNullish(jk)) {
+    if (!isFunction(jk)) {
         return ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))));
     }
-    if (!isNotNullish(kl)) {
+    if (!isFunction(kl)) {
         return jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))));
     }
-    if (!isNotNullish(lm)) {
+    if (!isFunction(lm)) {
         return kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))));
     }
-    if (!isNotNullish(mn)) {
+    if (!isFunction(mn)) {
         return lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))));
     }
-    if (!isNotNullish(no)) {
+    if (!isFunction(no)) {
         return mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))));
     }
-    if (!isNotNullish(op)) {
+    if (!isFunction(op)) {
         return no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))));
     }
-    if (!isNotNullish(pq)) {
+    if (!isFunction(pq)) {
         return op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))));
     }
-    if (!isNotNullish(qr)) {
+    if (!isFunction(qr)) {
         return pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))));
     }
-    if (!isNotNullish(rs)) {
+    if (!isFunction(rs)) {
         return qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))));
     }
-    if (!isNotNullish(st)) {
+    if (!isFunction(st)) {
         return rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a))))))))))))))))));
     }
     return st(rs(qr(pq(op(no(mn(lm(kl(jk(ij(hi(gh(fg(ef(de(cd(bc(ab(a)))))))))))))))))));

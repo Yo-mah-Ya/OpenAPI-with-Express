@@ -9,9 +9,7 @@ const reorder = (
 
 export const getFilms = async (
     query: operations["films"]["parameters"]["query"]
-): Promise<
-    operations["films"]["responses"]["200"]["content"]["application/json"]
-> => {
+): Promise<operations["films"]["responses"]["200"]["content"]["application/json"]> => {
     const reorderData = reorder(data, query.direction);
     const filmIndex = reorderData.findIndex((d) => d.id === query.cursor);
     const startIndex = filmIndex === -1 ? 0 : filmIndex + 1;
@@ -27,8 +25,7 @@ export const getFilms = async (
 export const getFilm = async (
     id: operations["film"]["parameters"]["path"]["id"]
 ): Promise<
-    | operations["film"]["responses"]["200"]["content"]["application/json"]
-    | undefined
+    operations["film"]["responses"]["200"]["content"]["application/json"] | undefined
 > => {
     return data.find((d) => d.id === id);
 };

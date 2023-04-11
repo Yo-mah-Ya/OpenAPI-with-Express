@@ -26,10 +26,7 @@
     "default-param-last": ["error"],
     "max-depth": ["error", 5],
     "no-eval": "error",
-    "@typescript-eslint/no-empty-function": [
-      "error",
-      { "allow": ["arrowFunctions"] }
-    ],
+    "@typescript-eslint/no-empty-function": ["error", { "allow": ["arrowFunctions"] }],
     "@typescript-eslint/explicit-function-return-type": "error",
     "@typescript-eslint/prefer-nullish-coalescing": "error",
     "@typescript-eslint/prefer-optional-chain": "error",

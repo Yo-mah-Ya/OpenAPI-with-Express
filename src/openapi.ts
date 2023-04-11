@@ -1,10 +1,7 @@
 import deepmerge from "deepmerge";
 import * as OpenApiValidator from "express-openapi-validator";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
-import {
-    components as filmsComponents,
-    paths as filmsPaths,
-} from "./films/controller";
+import { components as filmsComponents, paths as filmsPaths } from "./films/controller";
 import {
     components as peopleComponents,
     paths as peoplePaths,

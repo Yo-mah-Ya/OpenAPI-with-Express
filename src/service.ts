@@ -1,9 +1,4 @@
-import express, {
-    Express,
-    Response,
-    NextFunction,
-    ErrorRequestHandler,
-} from "express";
+import express, { Express, Response, NextFunction, ErrorRequestHandler } from "express";
 import compression from "compression";
 import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
@@ -25,18 +20,18 @@ const hasKey = (
     Object.prototype.hasOwnProperty.call(error, "headers") &&
     Object.prototype.hasOwnProperty.call(error, "errors");
 
-const isApiError = (
-    error: unknown
-): error is Error & { status: number; path: string } =>
+const isApiError = (error: unknown): error is Error & { status: number; path: string } =>
     error instanceof Error &&
     hasKey(error) &&
     typeof error.status === "number" &&
     typeof error.path === "string";
 
-const errorHandler: ErrorRequestHandler<
-    unknown,
-    components["schemas"]["Error"]
-> = (error: unknown, req, res: Response, next: NextFunction) => {
+const errorHandler: ErrorRequestHandler<unknown, components["schemas"]["Error"]> = (
+    error: unknown,
+    req,
+    res: Response,
+    next: NextFunction
+) => {
     if (res.headersSent) return next(error);
 
     if (isApiError(error)) {
@@ -73,9 +68,7 @@ export const getExpressApp = (serviceContext: ServiceContext): Express => {
     }).get("/schema-json", (_, res) => {
         res.status(200).json(schema);
     });
-    app.use(openApiValidator)
-        .use(createRouter(serviceContext))
-        .use(errorHandler);
+    app.use(openApiValidator).use(createRouter(serviceContext)).use(errorHandler);
     return app;
 };
 
